@@ -22,20 +22,9 @@ public class SpringContextStartListener implements ApplicationListener<ContextRe
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        System.out.println("springContext start ....");
+        log.info("springContext start ....");
 
         // 启动服务器
-        appServer.init();
         appServer.start();
-
-        // 注册进程钩子，在JVM进程关闭前释放资源
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                appServer.shutdown();
-                log.warn(">>>>>>>>>> jvm shutdown");
-                System.exit(0);
-            }
-        });
     }
 }

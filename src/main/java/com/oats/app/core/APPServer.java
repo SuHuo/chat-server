@@ -34,6 +34,8 @@ public class APPServer extends BaseServer {
 
     @Override
     public void start() {
+        init();
+
         b.group(bossGroup, workGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_KEEPALIVE, true)
@@ -71,6 +73,18 @@ public class APPServer extends BaseServer {
         } catch (InterruptedException e) {
             log.error("WebSocketServer start fail,", e);
         }
+
+        // 注册进程钩子，在JVM进程关闭前释放资源
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                shutdown();
+                log.warn(">>>>>>>>>> jvm shutdown");
+                System.exit(0);
+            }
+        });
+
+
     }
 
     @Override
